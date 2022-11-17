@@ -21,7 +21,9 @@
         type="password"
       />
       <br />
-      <button class="esqueceu-senha">Esqueceu a senha?</button>
+      <router-link class="esqueceu-senha" to="/cadastro"
+        >Faça o cadastro</router-link
+      >
       <br />
       <button @click="fazerLogin" class="input-button">Efetuar Login</button>
     </section>
