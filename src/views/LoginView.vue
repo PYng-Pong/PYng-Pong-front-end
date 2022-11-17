@@ -8,12 +8,22 @@
     <section class="losango"></section>
     <section class="login">
       <h1>Login</h1>
-      <input v-model="usuario.username" class="input-text" type="text" />
-      <input v-model="usuario.password" class="input-text" type="password" />
+      <input
+        v-model="usuario.username"
+        @keyup.enter="fazerLogin"
+        class="input-text"
+        type="text"
+      />
+      <input
+        v-model="usuario.password"
+        @keyup.enter="fazerLogin"
+        class="input-text"
+        type="password"
+      />
       <br />
       <button class="esqueceu-senha">Esqueceu a senha?</button>
       <br />
-      <button @click="login" class="input-button">Efetuar Login</button>
+      <button @click="fazerLogin" class="input-button">Efetuar Login</button>
     </section>
     <img
       class="raquete2"
@@ -37,10 +47,10 @@ export default {
     ...mapMutations("auth", ["unsetHeaders"]),
     ...mapActions("auth", ["login"]),
 
-    async login() {
+    async fazerLogin() {
       try {
         await this.login(this.usuario);
-        this.$router.push({ path: "/about" });
+        this.$router.push({ path: "/" });
       } catch (e) {
         console.log(e);
       }

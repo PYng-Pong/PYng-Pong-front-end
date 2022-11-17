@@ -5,8 +5,8 @@ export const auth = {
   namespaced: true,
   state: () => ({
     loggedIn: false,
-    token: null,
     user: null,
+    token: null,
   }),
   mutations: {
     setToken(state, userToken) {
@@ -30,6 +30,10 @@ export const auth = {
     },
   },
   actions: {
+    async getUser({ commit }) {
+      const userForm = await authService.get();
+      commit("setLoginInfo", userForm);
+    },
     async login({ dispatch, commit }, userForm) {
       try {
         const userToken = await authService.login(userForm);
@@ -49,10 +53,6 @@ export const auth = {
       } catch (e) {
         return Promise.reject(e);
       }
-    },
-    async getUser({ commit }) {
-      const userForm = await authService.get();
-      commit("setLoginInfo", userForm);
     },
     async updateUser({ dispatch }, newUser) {
       try {
