@@ -20,63 +20,36 @@
             <i class="fas fa-table-tennis" aria-hidden="true"></i>
           </span>
           {{ player.nome }}
-          <span @click="deletarJogador(player)" class="panel-icon">
-            <i class="fas fa-trash" aria-hidden="true"></i>
-          </span>
+          <div>
+            <span @click="setEdit(player)" class="panel-icon">
+              <i class="fas fa-pen" aria-hidden="true"></i>
+            </span>
+            <span @click="deletarJogador(player)" class="panel-icon">
+              <i class="fas fa-trash" aria-hidden="true"></i>
+            </span>
+          </div>
         </a>
       </article>
     </section>
-    <section class="columns">
-      <button class="column button" @click="verPerfil">Ver Perfil</button>
-      <button class="column button" @click="isActive = true">
-        Adicionar um jogador
-      </button>
-      <button class="column button">Remover um jogador</button>
-      <button class="column button">Editar um jogador</button>
-      <button class="column button" @click="setLogout">Sair</button>
-    </section>
-    <div :class="isActive ? 'modal is-active' : 'modal'">
-      <div class="modal-background" @click="isActive = false"></div>
-      <div class="modal-content">
-        <div class="card">
-          <div class="card-content">
-            <div class="content">
-              <section class="forms">
-                <div class="field">
-                  <label class="label">Crie o jogador</label>
-                  <div class="control">
-                    <input
-                      v-model="jogador.nome"
-                      class="input"
-                      type="email"
-                      placeholder="e.g. alexsmith@gmail.com"
-                    />
-                  </div>
-                </div>
-                <div class="control">
-                  <button class="button is-primary" @click="criarJogador">
-                    Criar jogador
-                  </button>
-                </div>
-              </section>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button
-        class="modal-close is-large"
-        @click="isActive = false"
-        aria-label="close"
-      ></button>
-    </div>
+    <NavBar />
+
+    <!-- Modais -->
+    <ModalCreatePlayer />
+    <ModalUpdatePlayer />
   </div>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import NavBar from "../components/NavBar.vue";
+import ModalCreatePlayer from "../components/modais/ModalCreatePlayer.vue";
+import ModalUpdatePlayer from "../components/modais/ModalUpdatePlayer.vue";
+
 export default {
+  components: { NavBar, ModalCreatePlayer, ModalUpdatePlayer },
   data: () => ({
     isActive: false,
+    isEditing: false,
   }),
   computed: {
     ...mapState("auth", ["user"]),
@@ -84,7 +57,7 @@ export default {
   },
   methods: {
     ...mapMutations("auth", ["setLogout"]),
-    ...mapActions("player", ["postJogador", "deleteJogador"]),
+    ...mapActions("player", ["postJogador", "updateJogador", "deleteJogador"]),
 
     verPerfil() {
       this.$router.push({ path: "/perfil" });
@@ -92,11 +65,25 @@ export default {
     paginaJogadores() {
       this.$router.push({ path: "/jogadores" });
     },
+    setEdit(player) {
+      this.isEditing = true;
+      this.jogador.nome = player.nome;
+      this.jogador.id = player.id;
+      this.isEditing = true;
+    },
     async criarJogador() {
       try {
         this.jogador.criado_por = this.user.id;
         await this.postJogador();
         this.isActive = false;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async editarJogador(jogadorID) {
+      try {
+        await this.updateJogador(jogadorID);
+        this.isEditing = false;
       } catch (e) {
         console.log(e);
       }
