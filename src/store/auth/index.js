@@ -23,10 +23,10 @@ export const auth = {
       delete axios.defaults.headers.common["Authorization"];
     },
     setLogout(state) {
-      //   state.user = null;
-      //   state.token = null;
-      //   state.loggedIn = false;
-      //   location.reload();
+      state.user = null;
+      state.token = null;
+      state.loggedIn = false;
+      location.reload();
     },
   },
   actions: {

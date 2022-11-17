@@ -27,7 +27,7 @@ export const player = {
         return Promise.reject(e);
       }
     },
-    async updateUser({ dispatch, state }, jogadorID) {
+    async updateJogador({ dispatch, state }, jogadorID) {
       try {
         await jogadorService.update(state.jogador, jogadorID);
         await dispatch("getJogadores");
@@ -35,9 +35,10 @@ export const player = {
         return Promise.reject(e);
       }
     },
-    async deleteUser({ state }, jogadorID) {
+    async deleteJogador({ dispatch }, jogadorID) {
       try {
-        await jogadorService.delete(state.jogador, jogadorID);
+        await jogadorService.delete(jogadorID);
+        await dispatch("getJogadores");
       } catch (e) {
         return Promise.reject(e);
       }

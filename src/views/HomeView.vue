@@ -1,6 +1,31 @@
 <template>
   <div id="home">
-    <section class="columns"></section>
+    <section class="columns">
+      <article class="panel is-success">
+        <p class="panel-heading">Jogadores</p>
+        <div class="panel-block">
+          <p class="control has-icons-left">
+            <input class="input is-success" type="text" placeholder="Search" />
+            <span class="icon is-left">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+          </p>
+        </div>
+        <a
+          class="panel-block is-justify-content-space-between"
+          v-for="player in jogadores"
+          :key="player.id"
+        >
+          <span class="panel-icon">
+            <i class="fas fa-table-tennis" aria-hidden="true"></i>
+          </span>
+          {{ player.nome }}
+          <span @click="deletarJogador(player)" class="panel-icon">
+            <i class="fas fa-trash" aria-hidden="true"></i>
+          </span>
+        </a>
+      </article>
+    </section>
     <section class="columns">
       <button class="column button" @click="verPerfil">Ver Perfil</button>
       <button class="column button" @click="isActive = true">
@@ -8,9 +33,7 @@
       </button>
       <button class="column button">Remover um jogador</button>
       <button class="column button">Editar um jogador</button>
-      <button class="column button" @click="paginaJogadores">
-        Ver lista de jogadores
-      </button>
+      <button class="column button" @click="setLogout">Sair</button>
     </section>
     <div :class="isActive ? 'modal is-active' : 'modal'">
       <div class="modal-background" @click="isActive = false"></div>
@@ -50,17 +73,18 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   data: () => ({
     isActive: false,
   }),
   computed: {
     ...mapState("auth", ["user"]),
-    ...mapState("player", ["jogador"]),
+    ...mapState("player", ["jogador", "jogadores"]),
   },
   methods: {
-    ...mapActions("player", ["postJogador"]),
+    ...mapMutations("auth", ["setLogout"]),
+    ...mapActions("player", ["postJogador", "deleteJogador"]),
 
     verPerfil() {
       this.$router.push({ path: "/perfil" });
@@ -73,6 +97,13 @@ export default {
         this.jogador.criado_por = this.user.id;
         await this.postJogador();
         this.isActive = false;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async deletarJogador({ id }) {
+      try {
+        await this.deleteJogador(id);
       } catch (e) {
         console.log(e);
       }

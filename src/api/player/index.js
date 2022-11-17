@@ -12,8 +12,8 @@ class JogadorService {
   async update(jogador, jogadorID) {
     await axios.patch(`api/jogadores/${jogadorID}`, jogador);
   }
-  async delete(jogador, jogadorID) {
-    await axios.delete(`api/jogadores/${jogadorID}`, jogador);
+  async delete(jogadorID) {
+    await axios.delete(`api/jogadores/${jogadorID}`);
   }
 }
 
