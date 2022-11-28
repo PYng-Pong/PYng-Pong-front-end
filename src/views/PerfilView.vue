@@ -2,53 +2,29 @@
   <div id="pefil">
     <section class="forms">
       <div class="field">
-        <label class="label">Nome</label>
+        <label class="label">Usuário</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            v-model="newUser.username"
-            placeholder="e.g alex"
-          />
-        </div>
-      </div>
-      <!-- <div class="field">
-        <label class="label">Email</label>
-        <div class="control">
-          <input
-            disabled
-            class="input"
-            type="email"
-            v-model="newUser.email"
-            placeholder="e.g. alexsmith@gmail.com"
-          />
-        </div>
-      </div> -->
-      <div class="field">
-        <label class="label">Nome</label>
-        <div class="control">
-          <input
-            class="input"
-            type="email"
-            v-model="newUser.first_name"
-            placeholder="e.g Alex"
-          />
+          <input class="input" type="text" v-model="newUser.username" placeholder="e.g alex" />
         </div>
       </div>
       <div class="field">
-        <label class="label">Sobrenome</label>
+        <label class="label">Digite sua nova senha</label>
         <div class="control">
-          <input
-            class="input"
-            type="email"
-            v-model="newUser.last_name"
-            placeholder="e.g Smith"
-          />
+          <input class="input" type="text" v-model="newPassword.new_password1" />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Confirme sua nova senha</label>
+        <div class="control">
+          <input class="input" type="text" v-model="newPassword.new_password2" />
         </div>
       </div>
       <div class="control">
-        <button class="button is-primary" @click="updateInfo">
+        <button class="button is-primary mr-2" @click="newPasswordInfo">
           Atualizar dados
+        </button>
+        <button class="button is-danger ml-2" @click="deleteUserAccount">
+          Deletar conta
         </button>
       </div>
     </section>
@@ -63,12 +39,13 @@ export default {
   },
   data: () => ({
     newUser: null,
+    newPassword: {},
   }),
   computed: {
     ...mapState("auth", ["user"]),
   },
   methods: {
-    ...mapActions("auth", ["updateUser"]),
+    ...mapActions("auth", ["updateUser", "changeUserPassword", "deleteUser"]),
 
     async updateInfo() {
       if (this.newUser.username == this.user.username)
@@ -79,6 +56,20 @@ export default {
         console.log(e);
       }
     },
+    async newPasswordInfo() {
+      try {
+        await this.changeUserPassword(this.newPassword);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async deleteUserAccount() {
+      try {
+        await this.deleteUser();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   },
 };
 </script>

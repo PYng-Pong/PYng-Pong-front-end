@@ -13,15 +13,18 @@ class AuthService {
     const { data } = await axios.post("auth/logout/");
     return data;
   }
+  async changePassword(newPassword) {
+    await axios.post("auth/password/change/", newPassword);
+  }
   async read() {
     const { data } = await axios.get("auth/user/");
     return data;
   }
   async update(newUser) {
-    console.log(newUser);
     await axios.patch("auth/user/", newUser);
   }
   async delete(inactivatedUser) {
+    console.log(inactivatedUser);
     await axios.patch("auth/user/", inactivatedUser);
   }
 }

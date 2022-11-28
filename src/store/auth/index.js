@@ -56,6 +56,14 @@ export const auth = {
         return Promise.reject(e);
       }
     },
+    async changeUserPassword({ dispatch }, newPassword) {
+      try {
+        await authService.changePassword(newPassword);
+        await dispatch("getUser");
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
     async updateUser({ dispatch }, newUser) {
       try {
         await authService.update(newUser);
@@ -69,11 +77,11 @@ export const auth = {
       commit("setLogout");
       location.reload();
     },
-    async deleteUser({ dispatch }) {
+    async deleteUser({ commit }) {
       try {
-        const inactivatedUser = { is_activate: false };
+        const inactivatedUser = { is_active: false };
         await authService.delete(inactivatedUser);
-        dispatch("getUser");
+        commit("setLogout");
       } catch (e) {
         return Promise.reject(e);
       }
