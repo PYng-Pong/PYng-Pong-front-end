@@ -13,12 +13,14 @@
         @keyup.enter="fazerLogin"
         class="input-text"
         type="text"
+        placeholder="Digite seu usuário"
       />
       <input
         v-model="usuario.password"
         @keyup.enter="fazerLogin"
         class="input-text"
         type="password"
+        placeholder="Digite sua senha"
       />
       <br />
       <router-link class="esqueceu-senha" to="/cadastro"

@@ -10,13 +10,14 @@ export const player = {
     setJogadoresInfo(state, jogadoresInfo) {
       state.jogadores = jogadoresInfo;
     },
-    // setJogadorInfo(state, jogadorInfo) {
-    //   state.jogador = jogadorInfo;
-    // },
+    unsetJogadorInfo(state) {
+      state.jogadores = [];
+      state.jogador = {};
+    },
   },
   actions: {
     async getJogadores({ commit }) {
-      const jogadoresInfo = await jogadorService.get();
+      const jogadoresInfo = await jogadorService.read();
       commit("setJogadoresInfo", jogadoresInfo);
     },
     async postJogador({ dispatch, state }) {

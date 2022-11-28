@@ -34,6 +34,7 @@
     <NavBar />
 
     <!-- Modais -->
+    <ModalShowAllPlayers />
     <ModalCreatePlayer />
     <ModalUpdatePlayer />
   </div>
@@ -42,21 +43,28 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 import NavBar from "../components/NavBar.vue";
+import ModalShowAllPlayers from "../components/modais/ModalShowAllPlayers.vue";
 import ModalCreatePlayer from "../components/modais/ModalCreatePlayer.vue";
 import ModalUpdatePlayer from "../components/modais/ModalUpdatePlayer.vue";
 
 export default {
-  components: { NavBar, ModalCreatePlayer, ModalUpdatePlayer },
+  components: {
+    NavBar,
+    ModalShowAllPlayers,
+    ModalCreatePlayer,
+    ModalUpdatePlayer,
+  },
   data: () => ({
     isActive: false,
     isEditing: false,
+    showQueue: false,
   }),
   computed: {
     ...mapState("auth", ["user"]),
     ...mapState("player", ["jogador", "jogadores"]),
   },
   methods: {
-    ...mapMutations("auth", ["setLogout"]),
+    ...mapActions("auth", ["logout"]),
     ...mapActions("player", ["postJogador", "updateJogador", "deleteJogador"]),
 
     verPerfil() {
@@ -73,7 +81,7 @@ export default {
     },
     async criarJogador() {
       try {
-        this.jogador.criado_por = this.user.id;
+        this.jogador.criado_por = this.user.pk;
         await this.postJogador();
         this.isActive = false;
       } catch (e) {

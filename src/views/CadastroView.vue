@@ -13,12 +13,21 @@
         @keyup.enter="cadastro"
         class="input-text"
         type="text"
+        placeholder="Digite seu usuário"
       />
       <input
-        v-model="usuario.password"
+        v-model="usuario.password1"
         @keyup.enter="cadastro"
         class="input-text"
         type="password"
+        placeholder="Digite sua senha"
+      />
+      <input
+        v-model="usuario.password2"
+        @keyup.enter="cadastro"
+        class="input-text"
+        type="password"
+        placeholder="Confirme sua senha"
       />
       <br />
       <router-link class="esqueceu-senha" to="/login">Faça o login</router-link>

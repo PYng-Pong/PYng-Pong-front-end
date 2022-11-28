@@ -10,7 +10,7 @@ export const auth = {
   }),
   mutations: {
     setToken(state, userToken) {
-      state.token = userToken.access;
+      state.token = userToken.access_token;
       state.loggedIn = true;
     },
     setLoginInfo(state, userForm) {
@@ -26,12 +26,11 @@ export const auth = {
       state.user = null;
       state.token = null;
       state.loggedIn = false;
-      location.reload();
     },
   },
   actions: {
     async getUser({ commit }) {
-      const userForm = await authService.get();
+      const userForm = await authService.read();
       commit("setLoginInfo", userForm);
     },
     async login({ dispatch, commit }, userForm) {
@@ -46,10 +45,13 @@ export const auth = {
         return Promise.reject(e);
       }
     },
-    async register({ dispatch }, userForm) {
+    async register({ dispatch, commit }, userForm) {
       try {
-        await authService.register(userForm);
-        await dispatch("login", userForm);
+        const userToken = await authService.create(userForm);
+        commit("setToken", userToken);
+        commit("setHeaders");
+        dispatch("getUser");
+        return Promise.resolve(userToken);
       } catch (e) {
         return Promise.reject(e);
       }
@@ -62,26 +64,16 @@ export const auth = {
         return Promise.reject(e);
       }
     },
-    async updateUserUsername({ dispatch }, newUsername) {
-      try {
-        await authService.updateUsername(newUsername);
-        await dispatch("getUser");
-      } catch (e) {
-        return Promise.reject(e);
-      }
+    async logout({ commit }) {
+      await authService.logout();
+      commit("setLogout");
+      location.reload();
     },
-    async updateUserPassword({ commit }, newPassword) {
+    async deleteUser({ dispatch }) {
       try {
-        await authService.updatePassword(newPassword);
-        commit("setLogout");
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
-    async deleteUser({ commit }, delUser) {
-      try {
-        await authService.deleteUserAccount(delUser);
-        commit("setLogout");
+        const inactivatedUser = { is_activate: false };
+        await authService.delete(inactivatedUser);
+        dispatch("getUser");
       } catch (e) {
         return Promise.reject(e);
       }

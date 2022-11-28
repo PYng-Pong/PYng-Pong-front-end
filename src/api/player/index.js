@@ -5,7 +5,7 @@ class JogadorService {
     const { data } = await axios.post("api/jogadores/", jogador);
     return data;
   }
-  async get() {
+  async read() {
     const { data } = await axios.get("api/jogadores/");
     return data;
   }

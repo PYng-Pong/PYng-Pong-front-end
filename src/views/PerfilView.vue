@@ -5,23 +5,44 @@
         <label class="label">Nome</label>
         <div class="control">
           <input
-            disabled
             class="input"
             type="text"
             v-model="newUser.username"
-            placeholder="e.g Alex Smith"
+            placeholder="e.g alex"
           />
         </div>
       </div>
-
-      <div class="field">
+      <!-- <div class="field">
         <label class="label">Email</label>
         <div class="control">
           <input
+            disabled
             class="input"
             type="email"
             v-model="newUser.email"
             placeholder="e.g. alexsmith@gmail.com"
+          />
+        </div>
+      </div> -->
+      <div class="field">
+        <label class="label">Nome</label>
+        <div class="control">
+          <input
+            class="input"
+            type="email"
+            v-model="newUser.first_name"
+            placeholder="e.g Alex"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Sobrenome</label>
+        <div class="control">
+          <input
+            class="input"
+            type="email"
+            v-model="newUser.last_name"
+            placeholder="e.g Smith"
           />
         </div>
       </div>
@@ -50,12 +71,12 @@ export default {
     ...mapActions("auth", ["updateUser"]),
 
     async updateInfo() {
-      if (this.newUser.email != this.user.email) {
-        try {
-          await this.updateUser(this.newUser);
-        } catch (e) {
-          console.log(e);
-        }
+      if (this.newUser.username == this.user.username)
+        delete this.newUser.username;
+      try {
+        await this.updateUser(this.newUser);
+      } catch (e) {
+        console.log(e);
       }
     },
   },
